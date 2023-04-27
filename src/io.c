@@ -6,14 +6,23 @@
 #include <stdio.h>
 #include "io.h"
 #include "array.h"
+#include "driver.h"
 
 #define UPPER 100
-#define LOWER -100
+#define LOWER (-100)
 
 int get_arr_size(void)
 {
     int x;
     printf("Podaj ilosc elementow: ");
+    scanf("%d", &x);
+    return x;
+}
+
+int get_benchmark_increment(void)
+{
+    int x;
+    printf("Podaj przyrost ilosci elementow: ");
     scanf("%d", &x);
     return x;
 }
@@ -46,7 +55,7 @@ void generate_data_file(int n, const char* filename)
 void read_to_array(Array *arr, const char* filename)
 {
     FILE *datafile = fopen(filename, "r");
-    char * line = NULL;
+    char *line = NULL;
     char *end = NULL;
     size_t len = 0;
     ssize_t read;
@@ -57,6 +66,14 @@ void read_to_array(Array *arr, const char* filename)
         fscanf(datafile, "%d", &arr->elements[i]);
         i++;
     }
-    printf("TEST");
+
     fclose(datafile);
+}
+
+void write_to_csv(TestObj** testObjArr, int n, int no_elements)
+{
+    for(int i = 0; i < n; i++)
+    {
+        char buff[256];
+    }
 }

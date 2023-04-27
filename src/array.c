@@ -8,9 +8,9 @@
 #include "io.h"
 
 #define UPPER 100
-#define LOWER -100
+#define LOWER (-100)
 
-Array *array_constructor(int size)
+Array *int_array_constructor(int size)
 {
     Array* arr = malloc(sizeof(Array));
     arr->size = size;

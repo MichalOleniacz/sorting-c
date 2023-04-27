@@ -6,11 +6,12 @@
 #include "utils.h"
 #include "bubble.h"
 
+#define FN_NAME "bubble_sort"
+
 void bubble_sort(TestObj *testObj)
 {
     int i, j;
-    testObj->name = (char*)malloc(sizeof (char)*strlen(__func__ ));
-    strncpy(testObj->name, __func__, strlen(__func__));
+    testObj->name = FN_NAME;
     for(i = 0; i < testObj->Arr->size - 1; i++)
         for (j = 0; j < testObj->Arr->size - i - 1; j++)
             if(testObj->Arr->elements[j] > testObj->Arr->elements[j + 1])

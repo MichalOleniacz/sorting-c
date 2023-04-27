@@ -10,7 +10,7 @@ typedef struct Array {
     int *elements;
 } Array;
 
-Array *array_constructor(int size);
+Array *int_array_constructor(int size);
 void array_destructor(Array* A);
 Array *array_copy(Array *A);
 void populate_from_datafile(Array *A, const char *name);

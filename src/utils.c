@@ -16,3 +16,10 @@ void print_array(Array *A) {
         printf("%d ", A->elements[i]);
     printf("\n");
 }
+
+void print_array_capped(Array *A, int cap) {
+    int i;
+    for (i = 0; i < cap; i++)
+        printf("%d ", A->elements[i]);
+    printf("\n");
+}
