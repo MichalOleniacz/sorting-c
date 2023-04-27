@@ -26,7 +26,7 @@ void array_destructor(Array *A)
 
 Array *array_copy(Array *A)
 {
-    Array *newArr = (Array*)malloc(sizeof(Array));
+    Array *newArr = (Array*)malloc(sizeof(struct Array));
     newArr->elements = (int*) malloc(A->size*(sizeof(int)));
     newArr->size = A->size;
     memcpy(newArr->elements, A->elements, A->size*sizeof(int));

@@ -25,7 +25,7 @@ typedef void (**TestFnArray)(TestObj* testObj);
 
 
 extern void benchmark(void (*func)(TestObj *testObj), TestObj *testObjIn);
-void benchmark_group(Array *A, TestFnArray funcArray, int benchmark_size);
+void benchmark_group(Array *A, TestFnArray funcArray, int benchmark_size, int toggle, int save);
 void *benchmark_thread(void *testObjVoid);
 TestObj *testObj_constructor(Array *A);
 void testObj_destructor(TestObj *testObj);

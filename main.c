@@ -1,4 +1,3 @@
-#include "log.h"
 #include "src/insertion.h"
 #include "src/selection.h"
 #include "src/bubble.h"
@@ -6,14 +5,12 @@
 #include "src/driver.h"
 #include "src/io.h"
 #include "src/array.h"
-#include <time.h>
 #include <stdio.h>
-#include <pthread.h>
 
 #define FLAG_GENERATE_DATAFILE          0
 #define FLAG_POPULATE_FROM_DATAFILE     1
 #define FLAG_POPULATE_RANDOM            0
-#define FLAG_AUTOMATED_BENCHMARK        1
+#define FLAG_AUTOMATED_BENCHMARK        0
 
 #define FLAG_USE_MANUAL_SELECTION       1
 #define FLAG_TEST_GROUP_ONE             1
@@ -35,7 +32,6 @@
  * Add missing algorithms
  * Refactor main
  * Upgrade algorithm selection
- * Create automated benchmark
 */
 
 int main() {
@@ -55,15 +51,17 @@ int main() {
     if(FLAG_AUTOMATED_BENCHMARK == 1)
     {
         increment = get_benchmark_increment();
+        int toggle = 1;
 
-        for(int i = 0; i < n; i=i+increment)
+        for(int i = 0; i <= n; i=i+increment)
         {
             Array *A = int_array_constructor(i);
             if(FLAG_POPULATE_RANDOM == 1)
                 populate_rand(A);
             else if(FLAG_POPULATE_FROM_DATAFILE == 1)
                 populate_from_datafile(A, DATAFILE_1000000);
-            benchmark_group(A, fn_all, SIZE_GROUP_I);
+            benchmark_group(A, fn_all, SIZE_GROUP_I, toggle, 1);
+            toggle = 0;
         }
         return 0;
     }
@@ -84,9 +82,9 @@ int main() {
         printf("%s %ld\n", testObj->name, testObj->result);
         testObj_destructor(testObj);
     } else if( selection == SELECTION_ALL_GROUP_I ) {
-        benchmark_group(A, fn_group_one, SIZE_GROUP_I);
+        benchmark_group(A, fn_group_one, SIZE_GROUP_I, 0, 0);
     } else if( selection == SELECTION_ALL_GROUP_II ) {
-        benchmark_group(A, fn_group_two, SIZE_GROUP_I);
+        benchmark_group(A, fn_group_two, SIZE_GROUP_I, 0, 0);
     }
 
     return 0;
