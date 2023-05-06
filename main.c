@@ -24,7 +24,7 @@
 
 #define FLAG_USE_MANUAL_SELECTION       1
 
-#define DATAFILE_100                    "dane"
+#define DATAFILE_MAIN                   "dane"
 #define DATAFILE_10000                  "dane10000"
 #define DATAFILE_100000                 "dane100000"
 #define DATAFILE_1000000                "dane1000000"
@@ -55,7 +55,7 @@ int main() {
         selection = get_algorithm_selection();
 
     if(FLAG_GENERATE_DATAFILE == 1)
-        generate_data_file(n, DATAFILE_1000000);
+        generate_data_file(n, DATAFILE_MAIN);
 
     if(FLAG_AUTOMATED_BENCHMARK == 1)
     {
@@ -68,7 +68,7 @@ int main() {
             if(FLAG_POPULATE_RANDOM == 1)
                 populate_rand(A);
             else if(FLAG_POPULATE_FROM_DATAFILE == 1)
-                populate_from_datafile(A, DATAFILE_1000000);
+                populate_from_datafile(A, DATAFILE_MAIN);
             else if (FLAG_POPULATE_ASC)
                 populate_asc(A);
             else if (FLAG_POPULATE_DESC)
@@ -80,7 +80,7 @@ int main() {
     }
 
     if(FLAG_AUTOMATED_BENCHMARK_SET == 1) {
-        benchmark_set(SET_START, SET_END, SET_STEP, fn_all, DATAFILE_1000000, SIZE_ALL, 1, 1, FLAG_POPULATE_FROM_DATAFILE, FLAG_POPULATE_ASC, FLAG_POPULATE_DESC);
+        benchmark_set(SET_START, SET_END, SET_STEP, fn_all, DATAFILE_MAIN, SIZE_ALL, 1, 1, FLAG_POPULATE_FROM_DATAFILE, FLAG_POPULATE_ASC, FLAG_POPULATE_DESC);
         return 0;
     }
 
@@ -89,7 +89,7 @@ int main() {
     if(FLAG_POPULATE_RANDOM == 1)
         populate_rand(A);
     if(FLAG_POPULATE_FROM_DATAFILE == 1)
-        populate_from_datafile(A, DATAFILE_1000000);
+        populate_from_datafile(A, DATAFILE_MAIN);
     if(FLAG_POPULATE_DESC == 1)
         populate_desc(A);
     if(FLAG_POPULATE_ASC == 1)
