@@ -1,6 +1,9 @@
 #include "src/insertion.h"
 #include "src/selection.h"
 #include "src/bubble.h"
+#include "src/quicksort.h"
+#include "src/shell.h"
+#include "src/heap.h"
 #include "src/utils.h"
 #include "src/driver.h"
 #include "src/io.h"
@@ -8,18 +11,30 @@
 #include <stdio.h>
 
 #define FLAG_GENERATE_DATAFILE          0
-#define FLAG_POPULATE_FROM_DATAFILE     1
-#define FLAG_POPULATE_RANDOM            0
+#define FLAG_POPULATE_FROM_DATAFILE     0
+#define FLAG_POPULATE_RANDOM            1
+#define FLAG_POPULATE_DESC              0
+#define FLAG_POPULATE_ASC               0
 #define FLAG_AUTOMATED_BENCHMARK        0
+#define FLAG_AUTOMATED_BENCHMARK_SET    0
+
+#define SET_START                       900000
+#define SET_END                         1000001
+#define SET_STEP                        100000
 
 #define FLAG_USE_MANUAL_SELECTION       1
-#define FLAG_TEST_GROUP_ONE             1
 
 #define DATAFILE_100                    "dane"
 #define DATAFILE_10000                  "dane10000"
 #define DATAFILE_100000                 "dane100000"
 #define DATAFILE_1000000                "dane1000000"
 
+#define SELECTION_SELECTION_SORT        0
+#define SELECTION_BUBBLE_SORT           1
+#define SELECTION_INSERTION_SORT        2
+#define SELECTION_QUICKSORT             3
+#define SELECTION_SHELL_SORT            4
+#define SELECTION_HEAP_SORT             5
 #define SELECTION_ALL_GROUP_I           6
 #define SELECTION_ALL_GROUP_II          7
 #define SELECTION_ALL                   8
@@ -28,21 +43,15 @@
 #define SIZE_GROUP_II                   3
 #define SIZE_ALL                        6
 
-/**
- * Add missing algorithms
- * Refactor main
- * Upgrade algorithm selection
-*/
-
 int main() {
     int n = get_arr_size();
     int selection = SELECTION_ALL, increment;
 
     TestFn fn_group_one[SIZE_GROUP_I] = {selection_sort, bubble_sort, insertion_sort};
-    TestFn fn_group_two[SIZE_GROUP_II] = {selection_sort, bubble_sort, insertion_sort};
-    TestFn fn_all[SIZE_ALL] = {selection_sort, bubble_sort, insertion_sort};
+    TestFn fn_group_two[SIZE_GROUP_II] = {quicksort_adapter, shell_sort, heap_sort};
+    TestFn fn_all[SIZE_ALL] = {selection_sort, bubble_sort, insertion_sort, quicksort_adapter, shell_sort, heap_sort};
 
-    if(FLAG_USE_MANUAL_SELECTION == 1 && FLAG_AUTOMATED_BENCHMARK == 0)
+    if(FLAG_USE_MANUAL_SELECTION == 1 && FLAG_AUTOMATED_BENCHMARK == 0 && FLAG_AUTOMATED_BENCHMARK_SET == 0)
         selection = get_algorithm_selection();
 
     if(FLAG_GENERATE_DATAFILE == 1)
@@ -53,16 +62,25 @@ int main() {
         increment = get_benchmark_increment();
         int toggle = 1;
 
-        for(int i = 0; i <= n; i=i+increment)
+        for(int i = 900000; i <= n; i=i+increment)
         {
             Array *A = int_array_constructor(i);
             if(FLAG_POPULATE_RANDOM == 1)
                 populate_rand(A);
             else if(FLAG_POPULATE_FROM_DATAFILE == 1)
                 populate_from_datafile(A, DATAFILE_1000000);
-            benchmark_group(A, fn_all, SIZE_GROUP_I, toggle, 1);
+            else if (FLAG_POPULATE_ASC)
+                populate_asc(A);
+            else if (FLAG_POPULATE_DESC)
+                populate_desc(A);
+            benchmark_group(A, fn_group_one, SIZE_GROUP_II, toggle, 1);
             toggle = 0;
         }
+        return 0;
+    }
+
+    if(FLAG_AUTOMATED_BENCHMARK_SET == 1) {
+        benchmark_set(SET_START, SET_END, SET_STEP, fn_all, DATAFILE_1000000, SIZE_ALL, 1, 1, FLAG_POPULATE_FROM_DATAFILE, FLAG_POPULATE_ASC, FLAG_POPULATE_DESC);
         return 0;
     }
 
@@ -70,21 +88,36 @@ int main() {
 
     if(FLAG_POPULATE_RANDOM == 1)
         populate_rand(A);
-    else if(FLAG_POPULATE_FROM_DATAFILE == 1)
+    if(FLAG_POPULATE_FROM_DATAFILE == 1)
         populate_from_datafile(A, DATAFILE_1000000);
+    if(FLAG_POPULATE_DESC == 1)
+        populate_desc(A);
+    if(FLAG_POPULATE_ASC == 1)
+        populate_asc(A);
 
     print_array(A);
 
-    if(selection < 3)
-    {
-        TestObj* testObj = testObj_constructor(A);
-        benchmark(fn_all[selection], testObj);
-        printf("%s %ld\n", testObj->name, testObj->result);
-        testObj_destructor(testObj);
-    } else if( selection == SELECTION_ALL_GROUP_I ) {
-        benchmark_group(A, fn_group_one, SIZE_GROUP_I, 0, 0);
-    } else if( selection == SELECTION_ALL_GROUP_II ) {
-        benchmark_group(A, fn_group_two, SIZE_GROUP_I, 0, 0);
+    switch (selection) {
+        case SELECTION_INSERTION_SORT:
+        case SELECTION_BUBBLE_SORT:
+        case SELECTION_SELECTION_SORT:
+        case SELECTION_QUICKSORT:
+        case SELECTION_SHELL_SORT:
+        case SELECTION_HEAP_SORT:
+            benchmark_single(A, fn_all[selection]);
+            break;
+        case SELECTION_ALL_GROUP_I:
+            benchmark_group(A, fn_group_one, SIZE_GROUP_I, 0, 0);
+            break;
+        case SELECTION_ALL_GROUP_II:
+            benchmark_group(A, fn_group_two, SIZE_GROUP_II, 0, 0);
+            break;
+        case SELECTION_ALL:
+            benchmark_group(A, fn_all, SIZE_ALL, 0, 0);
+            break;
+        default:
+            printf("Wybrana opcja nie isnieje!\n");
+            break;
     }
 
     return 0;

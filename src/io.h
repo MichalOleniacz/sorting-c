@@ -15,5 +15,6 @@ void generate_data_file(int n, const char* filename);
 void initialize_csv(TestObj **testObjArr, int no_functions);
 void read_to_array(Array *arr, const char* filename);
 void write_to_csv(TestObj** testObjArr, int no_functions, int no_elements);
+void batchwrite_to_csv(TestObj **testObjArray, int total_count, int no_functions);
 
 #endif //SORTOWANIE_IO_H

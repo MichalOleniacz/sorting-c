@@ -19,10 +19,19 @@ void benchmark(void (*func)(TestObj *testObj), TestObj *testObjIn)
     func(testObjIn);
     gettimeofday(&end, NULL);
 
-    testObjIn->result = (end.tv_sec * SECOND_TO_MICROSECOND_RATIO + end.tv_usec)
-                        - (start.tv_sec * SECOND_TO_MICROSECOND_RATIO + start.tv_usec);
+    testObjIn->result = ((double)end.tv_sec * (double)SECOND_TO_MICROSECOND_RATIO + (double)end.tv_usec)
+                        - ((double)start.tv_sec * (double)SECOND_TO_MICROSECOND_RATIO + (double)start.tv_usec);
 
     print_array(testObjIn->Arr);
+}
+
+void benchmark_single(Array* A, void (*func)(TestObj *testObj))
+{
+    TestObj* testObj = testObj_constructor(A);
+    benchmark(func, testObj);
+    printf("%s %Lf\n", testObj->name, testObj->result);
+//    print_array(testObj->Arr);
+    testObj_destructor(testObj);
 }
 
 void *benchmark_thread(void *testObjVoid)
@@ -35,11 +44,65 @@ void *benchmark_thread(void *testObjVoid)
     testObj->func(testObj);
     gettimeofday(&end, NULL);
 
-    testObj->result = (end.tv_sec * SECOND_TO_MICROSECOND_RATIO + end.tv_usec)
-                      - (start.tv_sec * SECOND_TO_MICROSECOND_RATIO + start.tv_usec);
+    testObj->result = ((double)end.tv_sec * (double)SECOND_TO_MICROSECOND_RATIO + (double)end.tv_usec)
+                      - ((double)start.tv_sec * (double)SECOND_TO_MICROSECOND_RATIO + (double)start.tv_usec);
     testObj = NULL;
     free(testObj);
     pthread_exit(NULL);
+}
+
+void benchmark_set(int starting_count, int max_elements, int step, TestFnArray funcArray, char* datafile, int benchmark_size, int toggle, int save, int _F_READ_FROM_FILE, int _F_RAND_ASC, int _F_RAND_DESC)
+{
+    int test_count = (max_elements / step) * benchmark_size;
+
+    pthread_t ptid[test_count];
+
+    TestObj **testObjArray = (TestObj**)malloc(sizeof(TestObj)*test_count);
+
+    int thread_id = 0;
+
+    for(int size = starting_count; size < max_elements; size += step) {
+        Array *A = int_array_constructor(size);
+        read_to_array(A, datafile);
+        for(int i = 0; i < benchmark_size; i++) {
+            Array *testArray = array_copy(A);
+            TestObj *testObj = testObj_constructor(testArray);
+            testObj->func = funcArray[i];
+            pthread_create(&ptid[thread_id], NULL, benchmark_thread, testObj);
+            testObjArray[thread_id] = testObj;
+            thread_id++;
+        }
+        array_destructor(A);
+    }
+
+    for(int i = 0; i < test_count; i++) {
+        pthread_join(ptid[i], NULL);
+    }
+
+    if(save == 1)
+    {
+//        initialize_csv(testObjArray, benchmark_size);
+        for(int i = 0; i < thread_id; i += benchmark_size)
+        {
+            TestObj **batch = (TestObj**)malloc(sizeof(TestObj)*benchmark_size);
+            int k = 0;
+            for(int j = i; j < i+benchmark_size; j++)
+            {
+                batch[k] = testObjArray[j];
+                k++;
+            }
+
+            write_to_csv(batch, k, batch[0]->Arr->size);
+            k = 0;
+            free(batch);
+        }
+//        batchwrite_to_csv(testObjArray, test_count, benchmark_size);
+    }
+
+    for (int i = 0; i < benchmark_size; i++) {
+        testObj_destructor(testObjArray[i]);
+    }
+
 }
 
 void benchmark_group(Array *A, TestFnArray funcArray, int benchmark_size, int toggle, int save)
@@ -57,8 +120,6 @@ void benchmark_group(Array *A, TestFnArray funcArray, int benchmark_size, int to
         testObjArray[i] = testObj;
     }
 
-
-
     for(int i = 0; i < benchmark_size; i++)
         pthread_join(ptid[i], NULL);
 
@@ -69,8 +130,15 @@ void benchmark_group(Array *A, TestFnArray funcArray, int benchmark_size, int to
         write_to_csv(testObjArray, benchmark_size, A->size);
     }
 
+
     for (int i = 0; i < benchmark_size; i++) {
-        printf("%s %d %ld\n", testObjArray[i]->name, testObjArray[i]->Arr->size, testObjArray[i]->result);
+        printf("%s\n", testObjArray[i]->name);
+        print_array(testObjArray[i]->Arr);
+    }
+
+
+    for (int i = 0; i < benchmark_size; i++) {
+        printf("%s %d %Lf\n", testObjArray[i]->name, testObjArray[i]->Arr->size, testObjArray[i]->result);
         testObj_destructor(testObjArray[i]);
     }
 

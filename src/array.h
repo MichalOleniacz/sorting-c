@@ -15,5 +15,7 @@ void array_destructor(Array* A);
 Array *array_copy(Array *A);
 void populate_from_datafile(Array *A, const char *name);
 void populate_rand(Array* A);
+void populate_desc(Array *A);
+void populate_asc(Array *A);
 
 #endif //SORTOWANIE_ARRAY_H

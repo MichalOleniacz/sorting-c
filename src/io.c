@@ -11,7 +11,7 @@
 
 #define UPPER 100
 #define LOWER (-100)
-#define CSV_FILE "output.csv"
+#define CSV_FILE "output_rand.csv"
 #define NO_ELEMENTS_STR "No. elements"
 #define NO_ELEMENTS_STRLEN 13
 
@@ -59,12 +59,7 @@ void generate_data_file(int n, const char* filename)
 void read_to_array(Array *arr, const char* filename)
 {
     FILE *datafile = fopen(filename, "r");
-    char *line = NULL;
-    char *end = NULL;
-    size_t len = 0;
-    ssize_t read;
     int i = 0;
-    int count = 0;
 
     while(!feof(datafile) && i < arr->size ){
         fscanf(datafile, "%d", &arr->elements[i]);
@@ -135,4 +130,38 @@ void write_to_csv(TestObj** testObjArr, int no_functions, int no_elements) {
     fputs("\n", csv);
     fclose(csv);
     free(buff);
+}
+
+void batchwrite_to_csv(TestObj **testObjArray, int total_count, int no_functions)
+{
+    unsigned long results_len = 512;
+
+    for(int i = 0; i < total_count; i += no_functions)
+    {
+        char *buff = (char *) malloc(sizeof(char) * results_len);
+        char *temp = malloc(sizeof(char)*results_len);
+        sprintf(temp, "%d,", testObjArray[i]->Arr->size);
+        strcat(buff,temp);
+        free(temp);
+
+        for(int j = i; j < total_count; j++) {
+            int digits = (int) log10((double) testObjArray[j]->result) + 1;
+            char *tmp;
+            if (digits > 0)
+                tmp = (char *) malloc(sizeof(char) * (digits + no_functions));
+            else tmp = (char *) malloc(sizeof(char) * no_functions);
+            if (i == no_functions - 1)
+                sprintf(tmp, "%d", (int) testObjArray[j]->result);
+            else
+                sprintf(tmp, "%d,", (int) testObjArray[j]->result);
+            strcat(buff, tmp);
+            free(tmp);
+        }
+
+        FILE *csv = fopen(CSV_FILE, "a");
+        fputs(buff, csv);
+        fputs("\n", csv);
+        fclose(csv);
+        free(buff);
+    }
 }

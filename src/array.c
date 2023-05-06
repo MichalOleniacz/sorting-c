@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 #include "array.h"
 #include "io.h"
 
@@ -38,6 +39,38 @@ void populate_rand(Array *A)
     srand(time(0));
     for(int i = 0; i < A->size; i++)
         A->elements[i] = (rand() % (UPPER - LOWER + 1)) + LOWER;
+}
+
+void populate_desc(Array *A)
+{
+    int sets = floor(A->size / 200);
+    int val = 100;
+    int j = 0;
+    srand(time(0));
+    for(int i = 0; i < A->size; i++) {
+        A->elements[i] = val;
+        j++;
+        if(j == sets) {
+            val--;
+            j = 0;
+        }
+    }
+}
+
+void populate_asc(Array *A)
+{
+    int sets = floor(A->size / 200);
+    int val = -100;
+    int j = 0;
+    srand(time(0));
+    for(int i = 0; i < A->size; i++) {
+        A->elements[i] = val;
+        j++;
+        if(j == sets) {
+            val++;
+            j = 0;
+        }
+    }
 }
 
 void populate_from_datafile(Array *A, const char *name)
