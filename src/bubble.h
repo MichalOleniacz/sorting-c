@@ -5,7 +5,7 @@
 #ifndef SORTOWANIE_BUBBLE_H
 #define SORTOWANIE_BUBBLE_H
 
-#include "driver.h"
+#include "benchmark.h"
 
 void bubble_sort(TestObj *testObj);
 

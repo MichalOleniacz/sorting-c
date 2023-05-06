@@ -2,8 +2,8 @@
 // Created by Michał Oleniacz on 25/04/2023.
 //
 
-#ifndef SORTOWANIE_DRIVER_H
-#define SORTOWANIE_DRIVER_H
+#ifndef SORTOWANIE_BENCHMARK_H
+#define SORTOWANIE_BENCHMARK_H
 
 #include <stdlib.h>
 #include <string.h>
@@ -32,4 +32,4 @@ void *benchmark_thread(void *testObjVoid);
 TestObj *testObj_constructor(Array *A);
 void testObj_destructor(TestObj *testObj);
 
-#endif //SORTOWANIE_DRIVER_H
+#endif //SORTOWANIE_BENCHMARK_H

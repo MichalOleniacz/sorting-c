@@ -5,7 +5,7 @@
 #include "src/shell.h"
 #include "src/heap.h"
 #include "src/utils.h"
-#include "src/driver.h"
+#include "src/benchmark.h"
 #include "src/io.h"
 #include "src/array.h"
 #include <stdio.h>

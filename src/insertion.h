@@ -5,7 +5,7 @@
 #ifndef SORTOWANIE_INSERTION_H
 #define SORTOWANIE_INSERTION_H
 
-#include "driver.h"
+#include "benchmark.h"
 
 void insertion_sort(TestObj *testObj);
 

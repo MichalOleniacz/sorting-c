@@ -7,7 +7,7 @@
 #include <sys/time.h>
 #include <pthread.h>
 #include <stdio.h>
-#include "driver.h"
+#include "benchmark.h"
 #include "utils.h"
 #include "io.h"
 

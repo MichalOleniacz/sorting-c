@@ -5,7 +5,7 @@
 #ifndef SORTOWANIE_SELECTION_H
 #define SORTOWANIE_SELECTION_H
 
-#include "driver.h"
+#include "benchmark.h"
 
 void selection_sort(TestObj *testObj);
 

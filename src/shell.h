@@ -5,7 +5,7 @@
 #ifndef SORTOWANIE_SHELL_H
 #define SORTOWANIE_SHELL_H
 
-#include "driver.h"
+#include "benchmark.h"
 
 void shell_sort(TestObj* testObj);
 

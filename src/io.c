@@ -7,7 +7,7 @@
 #include <math.h>
 #include "io.h"
 #include "array.h"
-#include "driver.h"
+#include "benchmark.h"
 
 #define UPPER 100
 #define LOWER (-100)

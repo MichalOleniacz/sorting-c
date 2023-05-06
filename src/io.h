@@ -6,7 +6,7 @@
 #define SORTOWANIE_IO_H
 
 #include "array.h"
-#include "driver.h"
+#include "benchmark.h"
 
 extern int get_arr_size(void);
 int get_benchmark_increment(void);

@@ -5,7 +5,7 @@
 #ifndef SORTOWANIE_HEAP_H
 #define SORTOWANIE_HEAP_H
 
-#include "driver.h"
+#include "benchmark.h"
 
 void heap_sort(TestObj *testObj);
 void heapify(Array *A, int n, int i);

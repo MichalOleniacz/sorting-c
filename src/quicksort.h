@@ -5,7 +5,7 @@
 #ifndef SORTOWANIE_QUICKSORT_H
 #define SORTOWANIE_QUICKSORT_H
 
-#include "driver.h"
+#include "benchmark.h"
 
 void quicksort_adapter(TestObj *testObj);
 void quicksort(TestObj *testObj, int low, int high);
