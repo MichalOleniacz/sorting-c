@@ -69,6 +69,8 @@ void read_to_array(Array *arr, const char* filename)
     fclose(datafile);
 }
 
+
+
 void initialize_csv(TestObj **testObjArr, int no_functions)
 {
     unsigned long names_len = NO_ELEMENTS_STRLEN + no_functions + 1;

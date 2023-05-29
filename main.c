@@ -15,7 +15,7 @@
 #define FLAG_POPULATE_RANDOM            1
 #define FLAG_POPULATE_DESC              0
 #define FLAG_POPULATE_ASC               0
-#define FLAG_AUTOMATED_BENCHMARK        0
+#define FLAG_AUTOMATED_BENCHMARK        1
 #define FLAG_AUTOMATED_BENCHMARK_SET    0
 
 #define SET_START                       900000
